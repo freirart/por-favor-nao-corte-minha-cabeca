@@ -1,5 +1,5 @@
 import React from "react";
-import { connect, io, Socket } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import Game from "../server/src/Entities/Game";
 import { Characters } from "../server/src/Entities/Character";
@@ -23,10 +23,7 @@ class App extends React.Component {
 
     componentDidMount() {
         if (!this.socket) {
-            const socket =
-                import.meta.env.ENVIRONMENT !== "PROD"
-                    ? connect("http://localhost:3000")
-                    : io();
+            const socket = io();
 
             this.socket = socket;
 
