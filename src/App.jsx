@@ -1,13 +1,16 @@
 import React from "react";
-import { io, Socket } from "socket.io-client";
+import { io, connect, Socket } from "socket.io-client";
 
 import Game from "../server/src/Entities/Game";
 import { Characters } from "../server/src/Entities/Character";
+
 import {
     isObjectWithProps,
     mappedActions,
     isObject,
 } from "../server/src/Core/utils";
+
+import NameInput from "./components/NameInput";
 
 class App extends React.Component {
     state = {
@@ -23,7 +26,9 @@ class App extends React.Component {
 
     componentDidMount() {
         if (!this.socket) {
-            const socket = io();
+            const socket = import.meta.env.DEV
+                ? connect("http://localhost:3000")
+                : io();
 
             this.socket = socket;
 
@@ -68,17 +73,16 @@ class App extends React.Component {
 
     checkIfPlayerIsTheHost = () => {
         const { game, socket, state } = this;
-        const { playerId, didPlayerEnteredTheGame } = state;
+        const { playerId, didPlayerEnteredTheGame, isHost } = state;
 
         if (game && socket) {
             const newState = {};
 
-            if (game.hostId === socket.id) {
+            if (!isHost && game.hostId === socket.id) {
                 newState.isHost = true;
-            } else if (
-                !didPlayerEnteredTheGame &&
-                game.findPlayerById(playerId)
-            ) {
+            }
+
+            if (!didPlayerEnteredTheGame && game.findPlayerById(playerId)) {
                 newState.didPlayerEnteredTheGame = true;
             }
 
@@ -179,25 +183,13 @@ class App extends React.Component {
         return (
             <div>
                 <h1>Por Favor Não Corte Minha Cabeça!</h1>
-                <p>
-                    <label htmlFor="playerName">
-                        Como deseja ser chamado(a)?
-                    </label>
-                    <input
-                        id="playerName"
-                        type="text"
-                        onChange={(e) =>
-                            this.setState({ playerName: e.target.value })
-                        }
-                    />
-                    <button
-                        disabled={didPlayerEnteredTheGame || !playerName}
-                        onClick={this.enterGame}
-                    >
-                        Enter Game
-                    </button>
-                </p>
-                <br />
+                <NameInput
+                    enterGame={this.enterGame}
+                    externalizePlayerName={(playerName) =>
+                        this.setState({ playerName })
+                    }
+                    didPlayerEnteredTheGame={didPlayerEnteredTheGame}
+                />
                 <button disabled={!playerId} onClick={this.chooseCharacterEmit}>
                     Choose Character
                 </button>
