@@ -65,42 +65,22 @@ class App extends React.Component {
         });
     };
 
-    displayStandardConnectionError = () => {
-        console.error(
-            "A conexão entre o cliente e o servidor não foi estabelecida com sucessso!"
-        );
-    };
-
     checkIfPlayerIsTheHost = () => {
         const { game, socket, state } = this;
         const { playerId, didPlayerEnteredTheGame, isHost } = state;
 
-        if (game && socket) {
-            const newState = {};
+        const newState = {};
 
-            if (!isHost && game.hostId === socket.id) {
-                newState.isHost = true;
-            }
-
-            if (!didPlayerEnteredTheGame && game.findPlayerById(playerId)) {
-                newState.didPlayerEnteredTheGame = true;
-            }
-
-            if (isObjectWithProps(newState)) {
-                this.setState({ ...newState });
-            }
-        } else {
-            this.displayStandardConnectionError();
+        if (!isHost && game.hostId === socket.id) {
+            newState.isHost = true;
         }
-    };
 
-    enterGame = () => {
-        const { playerId, playerName: name } = this.state;
+        if (!didPlayerEnteredTheGame && game.findPlayerById(playerId)) {
+            newState.didPlayerEnteredTheGame = true;
+        }
 
-        if (playerId) {
-            this.socket.emit("new-connection", { name });
-        } else {
-            this.displayStandardConnectionError();
+        if (isObjectWithProps(newState)) {
+            this.setState({ ...newState });
         }
     };
 
@@ -172,19 +152,14 @@ class App extends React.Component {
     };
 
     render() {
-        const {
-            isHost,
-            playerId,
-            characterName,
-            didPlayerEnteredTheGame,
-            playerName,
-        } = this.state;
+        const { isHost, playerId, characterName, didPlayerEnteredTheGame } =
+            this.state;
 
         return (
             <div>
                 <h1>Por Favor Não Corte Minha Cabeça!</h1>
                 <NameInput
-                    enterGame={this.enterGame}
+                    socket={this.socket}
                     externalizePlayerName={(playerName) =>
                         this.setState({ playerName })
                     }

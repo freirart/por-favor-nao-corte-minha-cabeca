@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const NameInput = ({
-    enterGame,
+    socket,
     didPlayerEnteredTheGame,
     externalizePlayerName,
 }) => {
@@ -17,6 +17,10 @@ const NameInput = ({
 
         return () => clearTimeout(timer);
     }, [playerName]);
+
+    const enterGame = () => {
+        socket.emit("new-connection", { name: playerName });
+    };
 
     if (didPlayerEnteredTheGame) {
         return null;
