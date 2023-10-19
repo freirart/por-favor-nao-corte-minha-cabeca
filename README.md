@@ -51,7 +51,7 @@ $ npm run dev
 -   [x] Matar `inUse` e `playerSocketId` do `Character` e transformar em função de `Game (getAvailableCharacters)`
 -   [x] Matar funções `reset` e `findByFavoriteAction` de Character
 -   [x] Começar o jogo retorna o `killerId` e atribuí a ação favorita para o Zeca
--   [ ] Depois disso tudo... melhorar os testes de game utilizando TODAS as funções
--   [ ] Resetar o jogo quando já começou mas teve uma desconexão que resultou em menos jogadores que o mínimo permitido
 -   [ ] Desconectar pelo client side
 -   [ ] Reconectar quando acontecer uma atualização pelo client side
+-   [ ] Melhorar os testes das entidades
+-   [x] Resetar o jogo quando já começou mas teve uma desconexão que resultou em menos jogadores que o mínimo permitido
