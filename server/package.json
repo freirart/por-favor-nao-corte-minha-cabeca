@@ -14,9 +14,9 @@
         "socket",
         "js"
     ],
-    "author": "luskas8",
+    "author": "freirart",
     "contributors": [
-        "freirart"
+        "luskas8"
     ],
     "dependencies": {
         "cors": "^2.8.5",

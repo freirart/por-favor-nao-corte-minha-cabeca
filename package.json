@@ -10,9 +10,9 @@
         "js"
     ],
     "type": "module",
-    "author": "luskas8",
+    "author": "freirart",
     "contributors": [
-        "freirart"
+        "luskas8"
     ],
     "scripts": {
         "dev": "concurrently \"vite\" \"cd server && npm run dev\"",
