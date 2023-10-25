@@ -12,6 +12,10 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
+    "plugins": [
+        "eslint-plugin-prettier",
+        "react"
+    ],
     "rules": {
         "indent": "error"
     }
