@@ -7,6 +7,7 @@ import { mappedActions, isObject } from "../server/src/Core/utils";
 
 import NameInput from "./components/NameInput";
 import ChooseCharacter from "./components/ChooseCharacter";
+import StartGame from "./components/StartGame";
 
 class App extends React.Component {
   state = {
@@ -115,12 +116,6 @@ class App extends React.Component {
     console.log("> Ajustei as informações do jogador!", game.summary);
   };
 
-  startGameEmit = () => {
-    if (this.state.isHost) {
-      this.socket.emit("start-game");
-    }
-  };
-
   startGameResponse = (data) => {
     const { game } = this;
 
@@ -163,11 +158,11 @@ class App extends React.Component {
           externalizeCharacterName={this.getExternalizeInfoFn("characterName")}
           didPlayerEnteredTheGame={didPlayerEnteredTheGame}
         />
-        {isHost ? (
-          <button disabled={!characterName} onClick={this.startGameEmit}>
-            Start Game
-          </button>
-        ) : null}
+        <StartGame
+          characterName={characterName}
+          isHost={isHost}
+          socket={socket}
+        />
       </div>
     );
   }
