@@ -22,7 +22,7 @@ v18.18.2
 Uma vez que a versão do Node esteja correta, obtém-se o código fonte da aplicação seguindo os seguintes passos:
 
 ```bash
-$ git clone https://github.com/luskas8/card-game.git
+$ git clone https://github.com/freirart/por-favor-nao-corte-minha-cabeca.git
 $ cd card-game
 $ npm run install-dev-deps
 ```
