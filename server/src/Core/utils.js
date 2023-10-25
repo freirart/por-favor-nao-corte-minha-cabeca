@@ -140,3 +140,11 @@ export const mappedActions = {
         }
     },
 };
+
+export const capitalizeStr = (str) => {
+    if (typeof str === "string") {
+        return str[0].toUpperCase() + str.slice(1);
+    }
+
+    return str;
+};
