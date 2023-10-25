@@ -1,0 +1,22 @@
+.charsWrapper {
+  display: flex;
+  max-width: 950px;
+  flex-wrap: wrap;
+}
+
+.card {
+  display: block;
+  max-height: 500px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.card:not(.alreadyInUse):hover {
+  border: 10px solid #fced15;
+  margin: 0;
+}
+
+.card.alreadyInUse {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
