@@ -2,7 +2,10 @@ import { capitalizeStr } from "../../server/src/Core/utils";
 import { Characters } from "../../server/src/Entities/Character";
 
 const getImages = () => {
-  const obj = {};
+  const obj = {
+    spinIcon: new URL(`./icon-spin.png`, import.meta.url).href,
+  };
+
   const { characters } = Characters;
 
   const charactersNames = characters.map((c) => c.normalizedName);
