@@ -7,7 +7,9 @@ const NameInput = ({
 }) => {
     const keyName = "playerName";
 
-    const [playerName, setPlayerName] = useState(localStorage.getItem(keyName));
+    const [playerName, setPlayerName] = useState(
+        localStorage.getItem(keyName) || ""
+    );
 
     useEffect(() => {
         const timer = setTimeout(() => {
