@@ -41,17 +41,18 @@ $ npm run dev
 
 ## TO-DO 📝
 
--   [x] Remover informação de quem é o host do jogador `hostId = socketId`
--   [x] Cartas escolhidas estarem no turno e não no jogador `{'playerId': [<card-1>, <card-2>]}`
--   [x] Remover "ready"
--   [x] Escalpo ficar na Rodada (Round) (killerId = socketId)
--   [x] Criar função getKillerIds (função do Game)
--   [x] Remover `_playersNotWasKillerSocketID` e transformar numa função de `Game` que itera pelos players do jogo e dos killerIds da rodada
--   [x] Transformar `GameStates` em "o jogo foi iniciado ou não?" (booleano = wasGameStarted) (ajustar função start)
--   [x] Matar `inUse` e `playerSocketId` do `Character` e transformar em função de `Game (getAvailableCharacters)`
--   [x] Matar funções `reset` e `findByFavoriteAction` de Character
--   [x] Começar o jogo retorna o `killerId` e atribuí a ação favorita para o Zeca
--   [ ] Depois disso tudo... melhorar os testes de game utilizando TODAS as funções
--   [ ] Resetar o jogo quando já começou mas teve uma desconexão que resultou em menos jogadores que o mínimo permitido
--   [ ] Desconectar pelo client side
--   [ ] Reconectar quando acontecer uma atualização pelo client side
+- [x] Reestruturar entidades que não foram desenhadas de forma adequada
+- [x] Servir estaticamente com o Express o build do frontend feito pelo Vite
+- [x] Deploy do pré-jogo
+- [x] Construção das artes do jogo
+- [x] Pré-jogo utilizando cartas
+- [ ] Testes unitários das entidades do jogo
+- [ ] Resetar o jogo quando já começou mas teve uma desconexão que resultou em menos jogadores que o mínimo permitido
+- [ ] Facilitar reconexão salvando o nome do usuário e do personagem escolhido
+- [ ] Desenvolver componente que lista os jogadores e seus respectivos personagens estilo Discord
+- [ ] Exibir nas cartas de ação os jogadores que a escolheram no turno atual para todos os jogadores com exceção do Escalpo
+- [ ] Implementar temporizador que seleciona uma carta automaticamente para evitar esperar indefinidamente
+- [ ] Implementar efeitos sonoros no hover das cartas
+- [ ] Implementar trilha sonora nas diferentes fases do jogo
+- [ ] Implementar efeitos sonoros na fase de resultados
+- [ ] Implementar menu sanduíche que contenha o histórico das rodadas/turnos
