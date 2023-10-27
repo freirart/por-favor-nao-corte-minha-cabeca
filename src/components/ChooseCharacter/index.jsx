@@ -6,6 +6,8 @@ import { Characters } from "../../../server/src/Entities/Character";
 
 import IMAGES from "../../imgs/Images";
 
+import { isFilledArray, mappedActions } from "../../../server/src/Core/utils";
+
 import "./index.css";
 
 const ChooseCharacter = ({
@@ -13,7 +15,11 @@ const ChooseCharacter = ({
   externalizeCharacterName,
   didPlayerEnteredTheGame,
   game,
+  playerId,
+  refreshFn,
 }) => {
+  const [selectedCharName, setSelectedCharName] = useState("");
+
   const cards = Characters.characters.map((c) => {
     const srcKey = `${c.normalizedName}Card`;
     const disabled = game && Boolean(game.findPlayerByCharacter(c.name));
@@ -24,15 +30,30 @@ const ChooseCharacter = ({
     };
   });
 
-  const [selectedCharName, setSelectedCharName] = useState("");
+  const eventName = "choose-character";
 
   useEffect(() => {
     if (selectedCharName && socket) {
-      externalizeCharacterName(selectedCharName, () => {
-        socket.emit("choose-character", {
-          characterName: selectedCharName,
+      if (!isFilledArray(socket.listeners(eventName))) {
+        socket.on(eventName, (data) => {
+          if (data.success) {
+            mappedActions["update-players"](game, {
+              playerId,
+              characterName: selectedCharName,
+            });
+
+            console.log("> Escolhi o meu personagem!", game.summary);
+
+            refreshFn();
+          } else {
+            console.error("> Erro ao escolher o personagem:", data);
+          }
         });
-      });
+      }
+
+      socket.emit(eventName, { characterName: selectedCharName });
+
+      externalizeCharacterName(selectedCharName);
     }
   }, [selectedCharName]);
 

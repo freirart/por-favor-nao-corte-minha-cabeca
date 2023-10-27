@@ -56,8 +56,6 @@ class App extends React.Component {
 
       this.refreshFn();
 
-      socket.on("choose-character", this.chooseCharacterResponse);
-
       socket.on("game-status-update", this.updateGame);
 
       socket.on("start-game", this.startGameResponse);
@@ -79,24 +77,6 @@ class App extends React.Component {
     }
 
     this.setState({ ...newState });
-  };
-
-  chooseCharacterResponse = (data) => {
-    const { game, state, refreshFn } = this;
-
-    if (data.success) {
-      const { playerId, characterName } = state;
-      mappedActions["update-players"](game, {
-        playerId,
-        characterName,
-      });
-
-      console.log("> Escolhi o meu personagem!", game.summary);
-
-      refreshFn();
-    } else {
-      console.error("> Erro ao escolher o personagem:", data);
-    }
   };
 
   updateGame = (data) => {
@@ -143,7 +123,7 @@ class App extends React.Component {
     };
 
   render() {
-    const { state, socket, game } = this;
+    const { state, socket, game, refreshFn, getExternalizeInfoFn } = this;
     const {
       isHost,
       characterName,
@@ -162,7 +142,9 @@ class App extends React.Component {
         <ChooseCharacter
           socket={socket}
           game={game}
-          externalizeCharacterName={this.getExternalizeInfoFn("characterName")}
+          playerId={playerId}
+          refreshFn={refreshFn}
+          externalizeCharacterName={getExternalizeInfoFn("characterName")}
           didPlayerEnteredTheGame={didPlayerEnteredTheGame}
         />
         <StartGame
