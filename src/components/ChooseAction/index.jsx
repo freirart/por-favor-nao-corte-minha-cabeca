@@ -86,7 +86,7 @@ const ChooseAction = ({ didGameStart, socket, game, playerId }) => {
           return (
             <Tooltip
               key={index}
-              isDisabled={!isFavoriteAction || disabled}
+              isDisabled={!isFavoriteAction || disabled || isPlayerTheKiller}
               label="Este é o seu lugar favorito!"
             >
               <Box className={className}>
