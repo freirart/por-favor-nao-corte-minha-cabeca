@@ -25,7 +25,7 @@ export default class Turn {
         const { killerId, chosenActions, killerMaxActions } = this;
 
         if (
-            !(playerId in actions) ||
+            !(playerId in chosenActions) ||
             (playerId === killerId &&
                 chosenActions[playerId].length < killerMaxActions)
         ) {

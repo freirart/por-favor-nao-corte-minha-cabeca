@@ -24,13 +24,13 @@ export default class Round {
     }
 
     get currentTurn() {
-        return [...this.turns].pop();
+        return [...this.turnsHistory].pop();
     }
 
     get summary() {
         return {
             killerId: this.killerId,
-            turns: this.turns,
+            turns: this.turnsHistory,
         };
     }
 
@@ -38,8 +38,8 @@ export default class Round {
         const { currentTurnIndex, turnsHistory, killerId } = this;
 
         if (this.canStartANewTurn()) {
+            turnsHistory.push(new Turn(killerId, currentTurnIndex + 1));
             this.currentTurnIndex += 1;
-            turnsHistory.push(new Turn(killerId, currentTurnIndex));
             return true;
         }
 
