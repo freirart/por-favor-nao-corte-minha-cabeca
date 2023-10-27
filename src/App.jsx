@@ -1,6 +1,8 @@
 import React from "react";
 import { io, connect, Socket } from "socket.io-client";
 
+import { Heading } from "@chakra-ui/react";
+
 import Game from "../server/src/Entities/Game";
 
 import { mappedActions, isObject } from "../server/src/Core/utils";
@@ -8,15 +10,16 @@ import { mappedActions, isObject } from "../server/src/Core/utils";
 import NameInput from "./components/NameInput";
 import ChooseCharacter from "./components/ChooseCharacter";
 import StartGame from "./components/StartGame";
+import ChooseAction from "./components/ChooseAction";
 
 class App extends React.Component {
   state = {
     playerId: undefined,
     isHost: undefined,
-    playerName: "",
     didPlayerEnteredTheGame: false,
     characterName: undefined,
     refreshCount: 0,
+    didGameStart: false,
   };
 
   /** @type {Socket} */ socket = undefined;
@@ -52,8 +55,6 @@ class App extends React.Component {
       this.game = game;
 
       this.refreshFn();
-
-      console.log("> Iniciei o jogo!", game.summary);
 
       socket.on("choose-character", this.chooseCharacterResponse);
 
@@ -122,6 +123,7 @@ class App extends React.Component {
     if (data.success) {
       if (game.start(data.killerId)) {
         console.log("> Started game:", game.summary);
+        this.setState({ didGameStart: true });
       } else {
         console.error("Failed to start game");
       }
@@ -142,14 +144,19 @@ class App extends React.Component {
 
   render() {
     const { state, socket, game } = this;
-    const { isHost, characterName, didPlayerEnteredTheGame } = state;
+    const {
+      isHost,
+      characterName,
+      didPlayerEnteredTheGame,
+      didGameStart,
+      playerId,
+    } = state;
 
     return (
       <div>
-        <h1>Por Favor Não Corte Minha Cabeça!</h1>
+        <Heading as="h1">Por Favor Não Corte Minha Cabeça!</Heading>
         <NameInput
           socket={socket}
-          externalizePlayerName={this.getExternalizeInfoFn("playerName")}
           didPlayerEnteredTheGame={didPlayerEnteredTheGame}
         />
         <ChooseCharacter
@@ -159,9 +166,17 @@ class App extends React.Component {
           didPlayerEnteredTheGame={didPlayerEnteredTheGame}
         />
         <StartGame
+          didGameStart={didGameStart}
+          socket={socket}
+          game={game}
           characterName={characterName}
           isHost={isHost}
+        />
+        <ChooseAction
+          playerId={playerId}
           socket={socket}
+          game={game}
+          didGameStart={didGameStart}
         />
       </div>
     );
