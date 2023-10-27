@@ -1,22 +1,28 @@
 .charsWrapper {
   display: flex;
-  max-width: 950px;
   flex-wrap: wrap;
 }
 
 .card {
-  display: block;
   max-height: 500px;
+}
+
+.cardBox {
   margin: 10px;
   cursor: pointer;
 }
 
-.card:not(.alreadyInUse):hover {
+.cardBox:not(.disabled):hover {
   border: 10px solid #fced15;
   margin: 0;
 }
 
-.card.alreadyInUse {
+.cardBox.favoriteAction:not(.disabled):hover {
+  border: 10px solid #fc15a3;
+  margin: 0;
+}
+
+.cardBox.disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
