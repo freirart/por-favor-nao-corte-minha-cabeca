@@ -57,8 +57,6 @@ class App extends React.Component {
       this.refreshFn();
 
       socket.on("game-status-update", this.updateGame);
-
-      socket.on("start-game", this.startGameResponse);
     });
   };
 
@@ -97,21 +95,6 @@ class App extends React.Component {
     console.log("> Ajustei as informações do jogador!", game.summary);
   };
 
-  startGameResponse = (data) => {
-    const { game } = this;
-
-    if (data.success) {
-      if (game.start(data.killerId)) {
-        console.log("> Started game:", game.summary);
-        this.setState({ didGameStart: true });
-      } else {
-        console.error("Failed to start game");
-      }
-    } else {
-      alert(data.error);
-    }
-  };
-
   getExternalizeInfoFn =
     (infoName) =>
     (info, cbFn = () => {}) => {
@@ -148,11 +131,11 @@ class App extends React.Component {
           didPlayerEnteredTheGame={didPlayerEnteredTheGame}
         />
         <StartGame
-          didGameStart={didGameStart}
           socket={socket}
           game={game}
           characterName={characterName}
           isHost={isHost}
+          externalizeDidGameStart={getExternalizeInfoFn("didGameStart")}
         />
         <ChooseAction
           playerId={playerId}

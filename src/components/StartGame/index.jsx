@@ -1,38 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Tooltip, Button, Text } from "@chakra-ui/react";
 
 import Spin from "../Icons/Spin";
 
-const StartGame = ({ isHost, characterName, socket, game, didGameStart }) => {
-  if (!characterName) {
+import { isFilledArray } from "../../../server/src/Core/utils";
+
+const StartGame = ({
+  isHost,
+  characterName,
+  socket,
+  game,
+  externalizeDidGameStart,
+}) => {
+  const [didGameStart, setDidGameStart] = useState(false);
+
+  const canGameStart = game && game.canGameStart();
+
+  const host = game && game.players.find((p) => p.playerId === game.hostId);
+
+  const eventName = "start-game";
+
+  if (game && socket && !isFilledArray(socket.listeners(eventName))) {
+    socket.on(eventName, (data) => {
+      if (data.success) {
+        if (game.start(data.killerId)) {
+          console.log("> Started game:", game.summary);
+          setDidGameStart(true);
+          externalizeDidGameStart(true);
+        } else {
+          console.error("Failed to start game");
+        }
+      } else {
+        alert(data.error);
+      }
+    });
+  }
+
+  const start = () => {
+    if (socket) {
+      socket.emit(eventName);
+    }
+  };
+
+  if (!characterName || didGameStart) {
     return null;
   }
 
-  const disabled = !game.canGameStart();
-
-  const host = game.players.find((p) => p.playerId === game.hostId);
-
   return (
     <>
-      {didGameStart ? null : isHost ? (
+      {isHost ? (
         <Tooltip
           hasArrow
-          isDisabled={!disabled}
+          isDisabled={canGameStart}
           placement="top"
           label="Não há jogadores o suficiente!"
         >
-          <Button
-            isDisabled={disabled}
-            onClick={() => socket.emit("start-game")}
-          >
+          <Button isDisabled={!canGameStart} onClick={start}>
             Start Game
           </Button>
         </Tooltip>
       ) : (
         <Text>
           <Spin />{" "}
-          {disabled
+          {!canGameStart
             ? "Aguardando jogadores..."
             : `Aguardando o host${
                 host ? ` (${host.name})` : ""
