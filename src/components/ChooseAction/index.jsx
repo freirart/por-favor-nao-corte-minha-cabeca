@@ -15,20 +15,22 @@ const ChooseAction = ({ didGameStart, socket, game, playerId }) => {
   const availableActions = Characters.getAvailableActions();
 
   const cards = game
-    ? availableActions.map((action) => {
-        const cardKey = `${action}Card`;
+    ? availableActions
+        .filter((card, index, arr) => arr.indexOf(card) === index)
+        .map((action) => {
+          const cardKey = `${action}Card`;
 
-        let isFavoriteAction = false;
+          let isFavoriteAction = false;
 
-        const player = game.findPlayerById(playerId);
+          const player = game.findPlayerById(playerId);
 
-        if (player && player.character) {
-          const favoriteAction = player.character.favoriteAction;
-          isFavoriteAction = favoriteAction === action;
-        }
+          if (player && player.character) {
+            const favoriteAction = player.character.favoriteAction;
+            isFavoriteAction = favoriteAction === action;
+          }
 
-        return { src: IMAGES[cardKey], action, isFavoriteAction };
-      })
+          return { src: IMAGES[cardKey], action, isFavoriteAction };
+        })
     : [];
 
   const isPlayerTheKiller =
