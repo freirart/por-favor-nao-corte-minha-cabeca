@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import { Text, Button, Input } from "@chakra-ui/react";
 
-const NameInput = ({ socket, didPlayerEnteredTheGame }) => {
+const NameInput = ({ socket, externalizeDidPlayerEnteredTheGame }) => {
   const keyName = "playerName";
 
   const [playerName, setPlayerName] = useState(
     localStorage.getItem(keyName) || ""
   );
+  const [didPlayerEnteredTheGame, setDidPlayerEnteredTheGame] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,6 +21,8 @@ const NameInput = ({ socket, didPlayerEnteredTheGame }) => {
   const enterGame = () => {
     if (socket) {
       socket.emit("new-connection", { name: playerName });
+      setDidPlayerEnteredTheGame(true);
+      externalizeDidPlayerEnteredTheGame(true);
     }
   };
 
