@@ -17,7 +17,8 @@
   margin: 0;
 }
 
-.cardBox.favoriteAction:not(.disabled):hover {
+.cardBox.favoriteAction:not(.disabled):hover,
+.cardBox.active:not(:hover):not(.disabled) {
   border: 10px solid #fc15a3;
   margin: 0;
 }
