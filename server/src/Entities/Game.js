@@ -75,7 +75,7 @@ class Game {
     }
 
     get currentRound() {
-        return [...this.rounds].pop();
+        return this.rounds[this.rounds.length - 1];
     }
 
     getRandomInt = (max) => Math.floor(Math.random() * max);
@@ -96,7 +96,7 @@ class Game {
         return "";
     }
 
-    nextRound(killerIdParam) {
+    nextRound(killerIdParam = "") {
         const { killerIds, currentRound, rounds } = this;
 
         if (!currentRound || !currentRound.canStartANewTurn()) {
