@@ -2,7 +2,7 @@
  * @typedef {string[]} Actions
  */
 
-export default class Turn {
+class Turn {
     killerId = "";
     killerMaxActions = 0;
     /** @type {string, Actions} */ chosenActions = {};
@@ -21,7 +21,7 @@ export default class Turn {
      * @param {string} playerId
      * @param {Actions} actions
      */
-    chooseAction(playerId, actions) {
+    chooseAction = (playerId, actions) => {
         const { killerId, chosenActions, killerMaxActions } = this;
 
         if (
@@ -34,5 +34,7 @@ export default class Turn {
         }
 
         return false;
-    }
+    };
 }
+
+export default Turn;
