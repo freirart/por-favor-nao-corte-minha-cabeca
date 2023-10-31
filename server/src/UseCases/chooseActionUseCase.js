@@ -9,16 +9,47 @@ import { Characters } from "../Entities/Character.js";
  * @param {Game} game
  * @returns {Promise<Success|Error>}
  */
-export default function chooseActionUseCase(playerId, actions, game) {
+const chooseActionUseCase = (playerId, actions, game) => {
     if (!isFilledArray(actions)) {
         return Error.badRequest("Actions should be an array with locations.");
     }
 
     const { characters } = Characters;
 
-    if (!actions.every((a) => characters.find((c) => c.favoriteAction === a))) {
+    if (
+        !actions.every(
+            (a) => !a || characters.find((c) => c.favoriteAction === a)
+        )
+    ) {
         return Error.badRequest("Actions array contain invalid actions.");
     }
 
-    return game.currentRound.currentTurn.chooseAction(playerId, actions);
-}
+    try {
+        const { currentRound, players } = game;
+        const { chooseAction, chosenActions, killerMaxActions } =
+            currentRound.currentTurn;
+
+        chooseAction(playerId, actions);
+
+        const didTurnEnd =
+            Object.keys(chosenActions).length === players.length &&
+            Object.values(chosenActions).find(
+                (v) => isFilledArray(v) && v.length === killerMaxActions
+            );
+
+        if (didTurnEnd) {
+            if (currentRound.canStartANewTurn()) {
+                game.currentRound.nextTurn();
+            } else {
+                game.nextRound();
+            }
+        }
+
+        return game.summary.rounds;
+    } catch (err) {
+        console.error(err);
+        return Error.message(err);
+    }
+};
+
+export default chooseActionUseCase;

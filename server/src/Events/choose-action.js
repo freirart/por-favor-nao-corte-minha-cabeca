@@ -26,7 +26,7 @@ export default function chooseAction(socket, actions, game) {
     } else {
         gameStatusUpdate(socket, {
             action: "update-turn",
-            data: { playerId, actions: [""] },
+            data: response,
         });
     }
 

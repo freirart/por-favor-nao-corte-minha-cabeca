@@ -74,6 +74,7 @@ class App extends React.Component {
       newState.didPlayerEnteredTheGame = true;
     }
 
+    console.log("> Atualizei o jogo!", game.summary);
     this.setState({ ...newState });
   };
 
@@ -91,8 +92,6 @@ class App extends React.Component {
     }
 
     this.refreshFn();
-
-    console.log("> Atualizei o jogo!", data, game.summary);
   };
 
   getExternalizeInfoFn =
