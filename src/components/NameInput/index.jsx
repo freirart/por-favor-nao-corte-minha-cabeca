@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Text, Button, Input } from "@chakra-ui/react";
 
-const NameInput = ({ socket, externalizeDidPlayerEnteredTheGame }) => {
+const NameInput = ({ socket }) => {
   const keyName = "playerName";
 
   const [playerName, setPlayerName] = useState(
@@ -22,7 +22,6 @@ const NameInput = ({ socket, externalizeDidPlayerEnteredTheGame }) => {
     if (socket) {
       socket.emit("new-connection", { name: playerName });
       setDidPlayerEnteredTheGame(true);
-      externalizeDidPlayerEnteredTheGame(true);
     }
   };
 

@@ -62,12 +62,16 @@ class App extends React.Component {
 
   refreshFn = () => {
     const { game, socket, state } = this;
-    const { isHost, refreshCount } = state;
+    const { isHost, refreshCount, didPlayerEnteredTheGame } = state;
 
     const newState = { refreshCount: refreshCount + 1 };
 
     if (!isHost && game.hostId === socket.id) {
       newState.isHost = true;
+    }
+
+    if (!didPlayerEnteredTheGame) {
+      newState.didPlayerEnteredTheGame = true;
     }
 
     this.setState({ ...newState });
@@ -88,7 +92,7 @@ class App extends React.Component {
 
     this.refreshFn();
 
-    console.log("> Ajustei as informações do jogador!", game.summary);
+    console.log("> Atualizei o jogo!", data, game.summary);
   };
 
   getExternalizeInfoFn =
@@ -114,12 +118,7 @@ class App extends React.Component {
     return (
       <div>
         <Heading as="h1">Por Favor Não Corte Minha Cabeça!</Heading>
-        <NameInput
-          socket={socket}
-          externalizeDidPlayerEnteredTheGame={getExternalizeInfoFn(
-            "didPlayerEnteredTheGame"
-          )}
-        />
+        <NameInput socket={socket} />
         <ChooseCharacter
           socket={socket}
           game={game}
@@ -136,10 +135,11 @@ class App extends React.Component {
           externalizeDidGameStart={getExternalizeInfoFn("didGameStart")}
         />
         <ChooseAction
-          playerId={playerId}
           socket={socket}
           game={game}
+          playerId={playerId}
           didGameStart={didGameStart}
+          refreshFn={refreshFn}
         />
       </div>
     );
