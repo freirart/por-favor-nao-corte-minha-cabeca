@@ -26,10 +26,17 @@ const chooseActionUseCase = (playerId, actions, game) => {
 
     try {
         const { currentRound, players } = game;
-        const { chooseAction, chosenActions, killerMaxActions } =
-            currentRound.currentTurn;
+        const { chosenActions, killerMaxActions } = currentRound.currentTurn;
 
-        chooseAction(playerId, actions);
+        console.log(
+            "> Vou atualizar o turno:",
+            JSON.stringify(game.currentRound.currentTurn)
+        );
+        game.currentRound.currentTurn.chooseAction(playerId, actions);
+        console.log(
+            "> Turno atualizado:",
+            JSON.stringify(game.currentRound.currentTurn)
+        );
 
         const didTurnEnd =
             Object.keys(chosenActions).length === players.length &&
@@ -44,8 +51,6 @@ const chooseActionUseCase = (playerId, actions, game) => {
                 game.nextRound();
             }
         }
-
-        return game.summary.rounds;
     } catch (err) {
         console.error(err);
         return Error.message(err);

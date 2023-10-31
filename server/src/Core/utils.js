@@ -153,9 +153,8 @@ export const mappedActions = {
      * @param {Object} data
      */
     "update-turn": (game, data) => {
-        for (const r of data) {
-            debugger;
-        }
+        const { [playerIdStr]: playerId, actions } = data;
+        chooseActionUseCase(playerId, actions, game);
     },
 };
 

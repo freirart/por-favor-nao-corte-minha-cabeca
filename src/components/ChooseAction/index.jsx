@@ -26,7 +26,7 @@ class ChooseAction extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { state, props, eventName } = this;
-    const { socket, game, playerId, refreshFn } = props;
+    const { socket, game, refreshFn } = props;
     const { maximizedSelections, selectedActions } = state;
 
     const isPlayerTheKiller = this.isPlayerTheKiller();
