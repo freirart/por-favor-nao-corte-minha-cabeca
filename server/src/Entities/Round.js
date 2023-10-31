@@ -15,26 +15,26 @@ export default class Round {
         this.nextTurn();
     }
 
-    canStartANewTurn() {
+    canStartANewTurn = () => {
         return this.currentTurnIndex < this.MAX_TURNS;
-    }
+    };
 
     get turns() {
         return this.turnsHistory.map((turn) => turn.chosenActions);
     }
 
     get currentTurn() {
-        return [...this.turnsHistory].pop();
+        return this.turnsHistory[this.turnsHistory.length - 1];
     }
 
     get summary() {
         return {
             killerId: this.killerId,
-            turns: this.turnsHistory,
+            turns: this.turns,
         };
     }
 
-    nextTurn() {
+    nextTurn = () => {
         const { currentTurnIndex, turnsHistory, killerId } = this;
 
         if (this.canStartANewTurn()) {
@@ -44,5 +44,5 @@ export default class Round {
         }
 
         return false;
-    }
+    };
 }
