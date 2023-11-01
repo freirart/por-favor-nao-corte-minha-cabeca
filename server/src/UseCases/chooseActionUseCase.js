@@ -27,15 +27,11 @@ const chooseActionUseCase = (playerId, actions, game) => {
     try {
         const { currentRound, players, nextRound } = game;
         const { currentTurn, nextTurn } = currentRound;
-        const { chosenActions, killerMaxActions, chooseAction } = currentTurn;
+        const { chosenActions, chooseAction } = currentTurn;
 
         chooseAction(playerId, actions);
 
-        const didTurnEnd =
-            Object.keys(chosenActions).length === players.length &&
-            Object.values(chosenActions).find(
-                (v) => isFilledArray(v) && v.length === killerMaxActions
-            );
+        const didTurnEnd = Object.keys(chosenActions).length === players.length;
 
         if (didTurnEnd) {
             if (currentRound.canStartANewTurn()) {
