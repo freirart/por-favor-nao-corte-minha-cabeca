@@ -46,15 +46,13 @@ $ npm run dev
 - [x] Deploy do pré-jogo
 - [x] Construção das artes do jogo
 - [x] Pré-jogo utilizando cartas
-- [x] Resetar o jogo quando já começou mas teve uma desconexão que resultou em menos jogadores que o mínimo permitido
-- [x] "Aguardando jogadores..." para "Esperando o host (nome do host) iniciar a partida..." quando o número mínimo de jogadores for atingido
-- [x] Facilitar reconexão salvando o nome do usuário e do personagem escolhido
+- [ ] Testes unitários das entidades do jogo
+- [ ] Resetar o jogo quando já começou mas teve uma desconexão que resultou em menos jogadores que o mínimo permitido
+- [ ] Facilitar reconexão salvando o nome do usuário e do personagem escolhido
 - [ ] Desenvolver componente que lista os jogadores e seus respectivos personagens estilo Discord
-- [ ] Implementar temporizador que inicia o jogo automaticamente para evitar esperas indefinidas
-- [ ] Implementar temporizador que seleciona uma carta automaticamente para evitar esperas indefinidas
+- [ ] Exibir nas cartas de ação os jogadores que a escolheram no turno atual para todos os jogadores com exceção do Escalpo
+- [ ] Implementar temporizador que seleciona uma carta automaticamente para evitar esperar indefinidamente
 - [ ] Implementar efeitos sonoros no hover das cartas
 - [ ] Implementar trilha sonora nas diferentes fases do jogo
 - [ ] Implementar efeitos sonoros na fase de resultados
 - [ ] Implementar menu sanduíche que contenha o histórico das rodadas/turnos
-- [ ] Discussão: o que acontece quando o Killer desconecta no meio da rodada?
-- [ ] Testes unitários das entidades do jogo

@@ -15,16 +15,16 @@ export default class Round {
         this.nextTurn();
     }
 
-    canStartANewTurn = () => {
+    canStartANewTurn() {
         return this.currentTurnIndex < this.MAX_TURNS;
-    };
+    }
 
     get turns() {
         return this.turnsHistory.map((turn) => turn.chosenActions);
     }
 
     get currentTurn() {
-        return this.turnsHistory[this.turnsHistory.length - 1];
+        return [...this.turns].pop();
     }
 
     get summary() {
@@ -34,15 +34,15 @@ export default class Round {
         };
     }
 
-    nextTurn = () => {
+    nextTurn() {
         const { currentTurnIndex, turnsHistory, killerId } = this;
 
         if (this.canStartANewTurn()) {
-            turnsHistory.push(new Turn(killerId, currentTurnIndex + 1));
             this.currentTurnIndex += 1;
+            turnsHistory.push(new Turn(killerId, currentTurnIndex));
             return true;
         }
 
         return false;
-    };
+    }
 }

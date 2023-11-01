@@ -2,7 +2,7 @@
  * @typedef {string[]} Actions
  */
 
-class Turn {
+export default class Turn {
     killerId = "";
     killerMaxActions = 0;
     /** @type {string, Actions} */ chosenActions = {};
@@ -21,11 +21,11 @@ class Turn {
      * @param {string} playerId
      * @param {Actions} actions
      */
-    chooseAction = (playerId, actions) => {
+    chooseAction(playerId, actions) {
         const { killerId, chosenActions, killerMaxActions } = this;
 
         if (
-            !(playerId in chosenActions) ||
+            !(playerId in actions) ||
             (playerId === killerId &&
                 chosenActions[playerId].length < killerMaxActions)
         ) {
@@ -34,7 +34,5 @@ class Turn {
         }
 
         return false;
-    };
+    }
 }
-
-export default Turn;

@@ -1,9 +1,7 @@
 import Round from "./Round.js";
 import Player from "./Player.js";
 
-import { isFilledArray, isObject } from "../Core/utils.js";
-
-import { ZECA } from "./Character.js";
+import { isObject } from "../Core/utils.js";
 
 class Game {
     hostId = "";
@@ -66,7 +64,7 @@ class Game {
     }
 
     start(killerId = "") {
-        if (this.canGameStart()) {
+        if (this.allPlayersChoseACharacter()) {
             this.didGameStart = true;
             return this.nextRound(killerId);
         }
@@ -75,7 +73,7 @@ class Game {
     }
 
     get currentRound() {
-        return this.rounds[this.rounds.length - 1];
+        return [...this.rounds].pop();
     }
 
     getRandomInt = (max) => Math.floor(Math.random() * max);
@@ -96,7 +94,7 @@ class Game {
         return "";
     }
 
-    nextRound = (killerIdParam = "") => {
+    nextRound(killerIdParam) {
         const { killerIds, currentRound, rounds } = this;
 
         if (!currentRound || !currentRound.canStartANewTurn()) {
@@ -108,12 +106,12 @@ class Game {
         }
 
         return false;
-    };
+    }
 
     defineZecaFavoritePlace(killerId) {
         const { players } = this;
 
-        const zecaPlayer = this.findPlayerByCharacter(ZECA.name);
+        const zecaPlayer = this.findPlayerByCharacter("Zeca");
 
         if (zecaPlayer) {
             let newAction = "";
@@ -131,13 +129,8 @@ class Game {
         }
     }
 
-    canGameStart() {
-        const { players, minPlayers, didGameStart } = this;
-        return (
-            !didGameStart &&
-            players.length >= minPlayers &&
-            players.every((player) => player.character != null)
-        );
+    allPlayersChoseACharacter() {
+        return this.players.every((player) => player.character != null);
     }
 
     /**
@@ -187,37 +180,15 @@ class Game {
      * @param {string} playerId
      */
     disconnectPlayer(playerId, shouldReassignHostId = true) {
-        const { players, hostId, didGameStart, killerIds, minPlayers, rounds } =
-            this;
+        const { players, hostId, didGameStart, killerIds } = this;
 
         if (!playerId || !players.find((p) => p.playerId === playerId)) {
             return false;
         }
 
-        const newPlayers = players.filter((p) => p.playerId !== playerId);
+        this.players = players.filter((p) => p.playerId !== playerId);
 
-        this.players = newPlayers;
-
-        if (newPlayers.length < minPlayers) {
-            if (didGameStart) {
-                this.didGameStart = false;
-            }
-
-            if (rounds.length) {
-                this.rounds = [];
-            }
-
-            if (!isFilledArray(newPlayers) && hostId) {
-                this.hostId = "";
-            }
-        }
-
-        if (
-            isFilledArray(newPlayers) &&
-            shouldReassignHostId &&
-            playerId === hostId &&
-            !didGameStart
-        ) {
+        if (shouldReassignHostId && playerId === hostId && !didGameStart) {
             this.hostId = this.getRandomPlayerId(killerIds);
         }
 

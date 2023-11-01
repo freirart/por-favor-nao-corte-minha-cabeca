@@ -14,10 +14,12 @@ export default function startGameUseCase(hostId, game) {
         return Error.forbidden(`You need at least ${game.minPlayers} players`);
     }
 
-    if (!game.canGameStart()) {
-        return Error.forbidden(
-            "The conditions to start the game were not met."
-        );
+    if (!game.allPlayersChoseACharacter()) {
+        return Error.forbidden("All players must choose a character");
+    }
+
+    if (game.didGameStart) {
+        return Error.forbidden("Game already started");
     }
 
     return game.start();

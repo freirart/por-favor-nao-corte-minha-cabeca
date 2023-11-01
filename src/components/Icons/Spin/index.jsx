@@ -1,11 +1,11 @@
 import React from "react";
 
-import { SpinnerIcon } from "@chakra-ui/icons";
+import IMAGES from "../../../imgs/Images";
 
 import "./index.css";
 
 const Spin = () => {
-  return <SpinnerIcon className="spin" />;
+  return <img src={IMAGES.spinIcon} className="spin" />;
 };
 
 export default Spin;

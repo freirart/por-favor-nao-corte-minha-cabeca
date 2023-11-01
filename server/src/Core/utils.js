@@ -1,8 +1,6 @@
 import Game from "../Entities/Game.js";
 import { Characters } from "../Entities/Character.js";
 
-import chooseActionUseCase from "../UseCases/chooseActionUseCase.js";
-
 export class Success {
     constructor(status = 200, message) {
         this.status = status;
@@ -111,8 +109,6 @@ export const isObject = (data) => data && typeof data === "object";
 export const isObjectWithProps = (data) =>
     isObject(data) && Object.keys(data).length > 0;
 
-const playerIdStr = "playerId";
-
 export const mappedActions = {
     /**
      *
@@ -120,6 +116,7 @@ export const mappedActions = {
      * @param {Object} data
      */
     "update-players": (game, data) => {
+        const playerIdStr = "playerId";
         const characterStr = "characterName";
 
         if (playerIdStr in data) {
@@ -136,25 +133,11 @@ export const mappedActions = {
             }
         }
     },
-    /**
-     *
-     * @param {Game} game
-     * @param {Object} data
-     */
     "update-game": (game, data) => {
         const entries = Object.entries(data);
         for (const [key, value] of entries) {
             game[key] = value;
         }
-    },
-    /**
-     *
-     * @param {Game} game
-     * @param {Object} data
-     */
-    "update-turn": (game, data) => {
-        const { [playerIdStr]: playerId, actions } = data;
-        chooseActionUseCase(playerId, actions, game);
     },
 };
 
@@ -165,5 +148,3 @@ export const capitalizeStr = (str) => {
 
     return str;
 };
-
-export const isFilledArray = (val) => Array.isArray(val) && val.length;
