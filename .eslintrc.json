@@ -3,7 +3,11 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "plugin:prettier/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended"],
   "settings": {
     "react": {
       "version": "detect"
@@ -19,5 +23,5 @@
     "testing-library/await-async-query": "off",
     "import/no-anonymous-default-export": "off"
   },
-  "plugins": ["eslint-plugin-prettier", "react"]
+  "plugins": ["eslint-plugin-prettier", "eslint-plugin-jsx-a11y", "eslint-plugin-react-hooks", "eslint-plugin-react-refresh", "react"]
 }
