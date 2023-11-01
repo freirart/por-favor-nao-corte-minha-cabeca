@@ -3,7 +3,12 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:prettier/recommended"],
+  "extends": ["plugin:react/recommended", "plugin:prettier/recommended"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
