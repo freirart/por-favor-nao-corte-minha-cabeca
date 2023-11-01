@@ -1,7 +1,6 @@
-import Game from "../../app/Entities/Game.js";
+import { Error, Success } from "../../app/Core/utils.js";
 import chooseCharacterUseCase from "../../app/UseCases/chooseCharacterUseCase.js";
 import newConnectionUseCase from "../../app/UseCases/newConnectionUseCase.js";
-import { Error, Success } from "../../app/Core/utils.js";
 
 describe("chooseCharacterUseCase", () => {
     const playerId = "40028922";
