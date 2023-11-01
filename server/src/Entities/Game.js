@@ -96,7 +96,7 @@ class Game {
         return "";
     }
 
-    nextRound(killerIdParam = "") {
+    nextRound = (killerIdParam = "") => {
         const { killerIds, currentRound, rounds } = this;
 
         if (!currentRound || !currentRound.canStartANewTurn()) {
@@ -108,7 +108,7 @@ class Game {
         }
 
         return false;
-    }
+    };
 
     defineZecaFavoritePlace(killerId) {
         const { players } = this;
