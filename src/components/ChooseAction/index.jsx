@@ -19,36 +19,44 @@ import "../ChooseCharacter/index.css";
 class ChooseAction extends React.Component {
   state = {
     selectedActions: [],
-    maximizedSelections: false,
+    maxSelectedActions: 1,
   };
 
   eventName = "choose-action";
 
+  componentDidUpdate(_, prevState) {
+    const { getMaxSelectedActions, isPlayerTheKiller, setNewState } = this;
+
+    const newState = {};
+
+    const maxSelectedActions = getMaxSelectedActions();
+
+    if (maxSelectedActions !== prevState.maxSelectedActions) {
+      newState.maxSelectedActions = maxSelectedActions;
+
+      if (isPlayerTheKiller()) {
+        newState.selectedActions = [];
+      }
+    }
+
+    setNewState(newState);
+  }
+
   choose = (action) => {
-    const {
-      eventName,
-      props,
-      state,
-      isPlayerTheKiller,
-      didUserMaximizeSelection,
-    } = this;
+    const { eventName, props, state, didUserMaximizeSelection } = this;
     const { game, refreshFn, playerId, socket } = props;
     const { selectedActions } = state;
 
     const newState = {};
 
-    if (didUserMaximizeSelection()) {
-      if (isPlayerTheKiller()) {
-        newState.selectedActions = [action];
-      }
-    } else if (action && !selectedActions.includes(action)) {
+    if (action && !selectedActions.includes(action)) {
       newState.selectedActions = [...selectedActions, action];
     }
 
-    const actions = newState.selectedActions || selectedActions;
+    const actions = newState.selectedActions;
 
     const maximized = didUserMaximizeSelection(actions);
-    debugger;
+
     if (maximized && socket) {
       if (!isFilledArray(socket.listeners(eventName))) {
         socket.on(eventName, (data) => {
@@ -65,10 +73,7 @@ class ChooseAction extends React.Component {
       socket.emit(eventName, actions);
     }
 
-    if (isObjectWithProps(newState)) {
-      console.log(JSON.stringify({ newState }));
-      this.setState({ ...newState });
-    }
+    this.setNewState(newState);
   };
 
   isPlayerTheKiller = () => {
@@ -126,8 +131,8 @@ class ChooseAction extends React.Component {
 
   isCardDisabled = (card) => {
     const { action } = card;
-    const { maximizedSelections, selectedActions } = this.state;
-    return maximizedSelections || selectedActions.includes(action);
+    const { selectedActions } = this.state;
+    return this.didUserMaximizeSelection() || selectedActions.includes(action);
   };
 
   getCardClassName = (card) => {
@@ -146,26 +151,35 @@ class ChooseAction extends React.Component {
     return className;
   };
 
-  didUserMaximizeSelection = (selectedActionsProps) => {
+  getMaxSelectedActions = () => {
     const { game } = this.props;
-    const { selectedActions: selectedActionsState } = this.state;
 
-    const selectedActions = selectedActionsProps || selectedActionsState;
-
-    const isTheKiller = this.isPlayerTheKiller();
-
-    const maxSelectedActions = isTheKiller
+    const maxSelectedActions = this.isPlayerTheKiller()
       ? game.currentRound.currentTurn.killerMaxActions
       : game && game.currentRound
       ? game.currentRound.currentTurnIndex
       : 1;
 
-    return selectedActions.length >= maxSelectedActions;
+    return maxSelectedActions;
+  };
+
+  didUserMaximizeSelection = (selectedActionsProps) => {
+    const { selectedActions: selectedActionsState } = this.state;
+
+    const selectedActions = selectedActionsProps || selectedActionsState;
+
+    return selectedActions.length >= this.getMaxSelectedActions();
+  };
+
+  setNewState = (newState) => {
+    if (isObjectWithProps(newState)) {
+      console.log(JSON.stringify({ newState }));
+      this.setState({ ...newState });
+    }
   };
 
   render() {
     const {
-      state,
       props,
       getTitle,
       getCards,
@@ -175,8 +189,6 @@ class ChooseAction extends React.Component {
       choose,
     } = this;
     const { didGameStart, game } = props;
-
-    // console.log({ selectedActions, maximizedSelections });
 
     if (!(game && game.currentRound && didGameStart)) {
       return null;
