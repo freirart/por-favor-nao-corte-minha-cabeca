@@ -1,49 +1,48 @@
 import React, { useEffect, useState } from "react";
 
-const NameInput = ({
-    socket,
-    didPlayerEnteredTheGame,
-    externalizePlayerName,
-}) => {
-    const keyName = "playerName";
+import { Text, Button, Input } from "@chakra-ui/react";
 
-    const [playerName, setPlayerName] = useState(
-        localStorage.getItem(keyName) || ""
-    );
+const NameInput = ({ socket }) => {
+  const keyName = "playerName";
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            externalizePlayerName(playerName);
-            localStorage.setItem(keyName, playerName);
-        }, 500);
+  const [playerName, setPlayerName] = useState(
+    localStorage.getItem(keyName) || ""
+  );
+  const [didPlayerEnteredTheGame, setDidPlayerEnteredTheGame] = useState(false);
 
-        return () => clearTimeout(timer);
-    }, [playerName]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      localStorage.setItem(keyName, playerName);
+    }, 500);
 
-    const enterGame = () => {
-        socket.emit("new-connection", { name: playerName });
-    };
+    return () => clearTimeout(timer);
+  }, [playerName]);
 
-    if (didPlayerEnteredTheGame) {
-        return null;
+  const enterGame = () => {
+    if (socket) {
+      socket.emit("new-connection", { name: playerName });
+      setDidPlayerEnteredTheGame(true);
     }
+  };
 
-    return (
-        <div>
-            <p>
-                <label htmlFor={keyName}>Como deseja ser chamado(a)?</label>
-                <input
-                    id={keyName}
-                    value={playerName}
-                    type="text"
-                    onChange={(e) => setPlayerName(e.target.value)}
-                />
-                <button disabled={!playerName} onClick={enterGame}>
-                    Enter Game
-                </button>
-            </p>
-        </div>
-    );
+  if (didPlayerEnteredTheGame) {
+    return null;
+  }
+
+  return (
+    <div>
+      <Text>Como deseja ser chamado(a)?</Text>
+      <Input
+        width={200}
+        value={playerName}
+        onChange={(e) => setPlayerName(e.target.value)}
+        placeholder="Um apelido legal"
+      />
+      <Button disabled={!playerName} onClick={enterGame}>
+        Enter Game
+      </Button>
+    </div>
+  );
 };
 
 export default NameInput;

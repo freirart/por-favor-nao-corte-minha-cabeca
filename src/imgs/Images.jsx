@@ -2,18 +2,16 @@ import { capitalizeStr } from "../../server/src/Core/utils";
 import { Characters } from "../../server/src/Entities/Character";
 
 const getImages = () => {
-  const obj = {
-    spinIcon: new URL(`./icon-spin.png`, import.meta.url).href,
-  };
+  const obj = {};
 
-  const { characters } = Characters;
+  const { characters, getAvailableActions } = Characters;
 
   const charactersNames = characters.map((c) => c.normalizedName);
-  const places = characters.map((c) => c.favoriteAction).filter((a) => a);
+  const actions = getAvailableActions();
 
-  for (const place of places) {
-    const key = `${place}Card`;
-    const value = new URL(`./card-${place}.png`, import.meta.url).href;
+  for (const action of actions) {
+    const key = `${action}Card`;
+    const value = new URL(`./card-${action}.png`, import.meta.url).href;
     obj[key] = value;
   }
 

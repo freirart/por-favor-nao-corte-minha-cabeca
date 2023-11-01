@@ -1,6 +1,8 @@
 import React from "react";
 import { io, connect, Socket } from "socket.io-client";
 
+import { Heading } from "@chakra-ui/react";
+
 import Game from "../server/src/Entities/Game";
 
 import { mappedActions, isObject } from "../server/src/Core/utils";
@@ -8,15 +10,16 @@ import { mappedActions, isObject } from "../server/src/Core/utils";
 import NameInput from "./components/NameInput";
 import ChooseCharacter from "./components/ChooseCharacter";
 import StartGame from "./components/StartGame";
+import ChooseAction from "./components/ChooseAction";
 
 class App extends React.Component {
   state = {
     playerId: undefined,
     isHost: undefined,
-    playerName: "",
     didPlayerEnteredTheGame: false,
     characterName: undefined,
     refreshCount: 0,
+    didGameStart: false,
   };
 
   /** @type {Socket} */ socket = undefined;
@@ -53,19 +56,13 @@ class App extends React.Component {
 
       this.refreshFn();
 
-      console.log("> Iniciei o jogo!", game.summary);
-
-      socket.on("choose-character", this.chooseCharacterResponse);
-
       socket.on("game-status-update", this.updateGame);
-
-      socket.on("start-game", this.startGameResponse);
     });
   };
 
   refreshFn = () => {
     const { game, socket, state } = this;
-    const { playerId, didPlayerEnteredTheGame, isHost, refreshCount } = state;
+    const { isHost, refreshCount, didPlayerEnteredTheGame } = state;
 
     const newState = { refreshCount: refreshCount + 1 };
 
@@ -73,29 +70,12 @@ class App extends React.Component {
       newState.isHost = true;
     }
 
-    if (!didPlayerEnteredTheGame && game.findPlayerById(playerId)) {
+    if (!didPlayerEnteredTheGame) {
       newState.didPlayerEnteredTheGame = true;
     }
 
+    console.log("> Atualizei o jogo!", game.summary);
     this.setState({ ...newState });
-  };
-
-  chooseCharacterResponse = (data) => {
-    const { game, state, refreshFn } = this;
-
-    if (data.success) {
-      const { playerId, characterName } = state;
-      mappedActions["update-players"](game, {
-        playerId,
-        characterName,
-      });
-
-      console.log("> Escolhi o meu personagem!", game.summary);
-
-      refreshFn();
-    } else {
-      console.error("> Erro ao escolher o personagem:", data);
-    }
   };
 
   updateGame = (data) => {
@@ -112,22 +92,6 @@ class App extends React.Component {
     }
 
     this.refreshFn();
-
-    console.log("> Ajustei as informações do jogador!", game.summary);
-  };
-
-  startGameResponse = (data) => {
-    const { game } = this;
-
-    if (data.success) {
-      if (game.start(data.killerId)) {
-        console.log("> Started game:", game.summary);
-      } else {
-        console.error("Failed to start game");
-      }
-    } else {
-      alert(data.error);
-    }
   };
 
   getExternalizeInfoFn =
@@ -141,27 +105,40 @@ class App extends React.Component {
     };
 
   render() {
-    const { state, socket, game } = this;
-    const { isHost, characterName, didPlayerEnteredTheGame } = state;
+    const { state, socket, game, refreshFn, getExternalizeInfoFn } = this;
+    const {
+      isHost,
+      characterName,
+      didPlayerEnteredTheGame,
+      didGameStart,
+      playerId,
+    } = state;
 
     return (
       <div>
-        <h1>Por Favor Não Corte Minha Cabeça!</h1>
-        <NameInput
-          socket={socket}
-          externalizePlayerName={this.getExternalizeInfoFn("playerName")}
-          didPlayerEnteredTheGame={didPlayerEnteredTheGame}
-        />
+        <Heading as="h1">Por Favor Não Corte Minha Cabeça!</Heading>
+        <NameInput socket={socket} />
         <ChooseCharacter
           socket={socket}
           game={game}
-          externalizeCharacterName={this.getExternalizeInfoFn("characterName")}
+          playerId={playerId}
+          refreshFn={refreshFn}
+          externalizeCharacterName={getExternalizeInfoFn("characterName")}
           didPlayerEnteredTheGame={didPlayerEnteredTheGame}
         />
         <StartGame
+          socket={socket}
+          game={game}
           characterName={characterName}
           isHost={isHost}
+          externalizeDidGameStart={getExternalizeInfoFn("didGameStart")}
+        />
+        <ChooseAction
           socket={socket}
+          game={game}
+          playerId={playerId}
+          didGameStart={didGameStart}
+          refreshFn={refreshFn}
         />
       </div>
     );

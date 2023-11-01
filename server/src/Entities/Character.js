@@ -66,6 +66,15 @@ export class Characters {
     static characters = [BOCAO, FRED, JAIME, SERENA, TATI, ZECA];
 
     static findByName(name) {
-        return this.characters.find((character) => character.name === name);
+        return Characters.characters.find(
+            (character) => character.name === name
+        );
+    }
+
+    static getAvailableActions() {
+        const allActions = Characters.characters.map((c) => c.favoriteAction);
+        const filteredActions = allActions.filter((a) => a);
+
+        return filteredActions;
     }
 }
