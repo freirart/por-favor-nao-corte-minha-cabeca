@@ -34,7 +34,10 @@ class ChooseAction extends React.Component {
     if (maxSelectedActions !== prevState.maxSelectedActions) {
       newState.maxSelectedActions = maxSelectedActions;
 
-      if (isPlayerTheKiller()) {
+      if (
+        isPlayerTheKiller() ||
+        maxSelectedActions < prevState.maxSelectedActions
+      ) {
         newState.selectedActions = [];
       }
     }
@@ -43,8 +46,16 @@ class ChooseAction extends React.Component {
   }
 
   choose = (action) => {
-    const { eventName, props, state, didUserMaximizeSelection } = this;
-    const { game, refreshFn, playerId, socket } = props;
+    const {
+      eventName,
+      props,
+      state,
+      didUserMaximizeSelection,
+      isPlayerTheKiller,
+      setNewState,
+      updateGame,
+    } = this;
+    const { socket } = props;
     const { selectedActions } = state;
 
     const newState = {};
@@ -58,22 +69,39 @@ class ChooseAction extends React.Component {
     const maximized = didUserMaximizeSelection(actions);
 
     if (maximized && socket) {
-      if (!isFilledArray(socket.listeners(eventName))) {
-        socket.on(eventName, (data) => {
-          if (data.success) {
-            mappedActions["update-turn"](game, { playerId, actions });
+      const socketActions = isPlayerTheKiller()
+        ? actions
+        : [[...actions].pop()];
 
-            refreshFn();
-          } else {
-            console.error("> Erro ao escolher ação:", data);
-          }
-        });
+      if (isFilledArray(socket.listeners(eventName))) {
+        socket.off(eventName);
+        updateGame(socketActions);
+      } else {
+        updateGame(socketActions);
       }
 
-      socket.emit(eventName, actions);
+      socket.emit(eventName, socketActions);
     }
 
-    this.setNewState(newState);
+    setNewState(newState);
+  };
+
+  updateGame = (socketActions) => {
+    const { props, eventName } = this;
+    const { socket, refreshFn, playerId, game } = props;
+
+    socket.on(eventName, (data) => {
+      if (data.success) {
+        mappedActions["update-turn"](game, {
+          playerId,
+          actions: socketActions,
+        });
+
+        refreshFn();
+      } else {
+        console.error("> Erro ao escolher ação:", data);
+      }
+    });
   };
 
   isPlayerTheKiller = () => {
@@ -164,16 +192,16 @@ class ChooseAction extends React.Component {
   };
 
   didUserMaximizeSelection = (selectedActionsProps) => {
-    const { selectedActions: selectedActionsState } = this.state;
+    const { selectedActions: selectedActionsState, maxSelectedActions } =
+      this.state;
 
     const selectedActions = selectedActionsProps || selectedActionsState;
 
-    return selectedActions.length >= this.getMaxSelectedActions();
+    return selectedActions.length >= maxSelectedActions;
   };
 
   setNewState = (newState) => {
     if (isObjectWithProps(newState)) {
-      console.log(JSON.stringify({ newState }));
       this.setState({ ...newState });
     }
   };
