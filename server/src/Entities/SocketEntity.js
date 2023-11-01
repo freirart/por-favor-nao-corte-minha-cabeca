@@ -1,8 +1,11 @@
 import { Server } from "socket.io";
-import { Server as HttpServer } from "http";
-import Game from "./Game.js";
 import mainEvent from "../Events/index.js";
 import logger from "./Logger.js";
+
+/**
+ * @typedef {import("http").Server} HttpServer
+ * @typedef {import("./Game.js")} Game
+ */
 
 class Socket {
     /** @type {Server} */ _io;

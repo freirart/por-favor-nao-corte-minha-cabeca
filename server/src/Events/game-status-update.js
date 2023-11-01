@@ -1,4 +1,6 @@
-import { Socket } from "socket.io";
+/**
+ * @typedef {import("socket.io").Socket"} Socket
+ */
 
 /**
  * @param {Socket} socket

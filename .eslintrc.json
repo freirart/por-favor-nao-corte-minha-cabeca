@@ -3,14 +3,16 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["react-app", "react-app/jest", "plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended"],
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "rules": {
-    "indent": "error"
+    "indent": "error",
+    "testing-library/await-async-query": "off",
+    "import/no-anonymous-default-export": "off"
   },
   "plugins": ["eslint-plugin-prettier", "react"]
 }

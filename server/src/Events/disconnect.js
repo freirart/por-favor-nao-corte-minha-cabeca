@@ -1,6 +1,9 @@
-import { Socket } from "socket.io";
-import Game from "../Entities/Game.js";
 import gameStatusUpdate from "./game-status-update.js";
+
+/**
+ * @typedef {import("../Entities/Game.js")} Game
+ * @typedef {import("socket.io").Socket"} Socket
+ */
 
 /**
  * @param {Socket} socket

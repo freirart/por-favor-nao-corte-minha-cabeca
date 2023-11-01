@@ -1,4 +1,6 @@
-import { BaseCharacter } from "./Character.js";
+/**
+ * @typedef {import("./Character.js").BaseCharacter} BaseCharacter
+ */
 
 export default class Player {
     /** @type {BaseCharacter} */ character = null;
