@@ -24,31 +24,36 @@ class ChooseAction extends React.Component {
 
   eventName = "choose-action";
 
-  componentDidUpdate(prevProps, prevState) {
-    const { state, props, eventName } = this;
-    const { socket, game, refreshFn } = props;
-    const { maximizedSelections, selectedActions } = state;
-
-    const isPlayerTheKiller = this.isPlayerTheKiller();
-
-    const maxSelectedActions = isPlayerTheKiller
-      ? game.currentRound.currentTurn.killerMaxActions
-      : game && game.currentRound
-      ? game.currentRound.currentTurnIndex
-      : 1;
+  choose = (action) => {
+    const {
+      eventName,
+      props,
+      state,
+      isPlayerTheKiller,
+      didUserMaximizeSelection,
+    } = this;
+    const { game, refreshFn, playerId, socket } = props;
+    const { selectedActions } = state;
 
     const newState = {};
 
-    if (
-      prevState.selectedActions.length < selectedActions.length &&
-      !maximizedSelections &&
-      socket &&
-      selectedActions.length >= maxSelectedActions
-    ) {
+    if (didUserMaximizeSelection()) {
+      if (isPlayerTheKiller()) {
+        newState.selectedActions = [action];
+      }
+    } else if (action && !selectedActions.includes(action)) {
+      newState.selectedActions = [...selectedActions, action];
+    }
+
+    const actions = newState.selectedActions || selectedActions;
+
+    const maximized = didUserMaximizeSelection(actions);
+    debugger;
+    if (maximized && socket) {
       if (!isFilledArray(socket.listeners(eventName))) {
         socket.on(eventName, (data) => {
           if (data.success) {
-            mappedActions["update-turn"](game, data);
+            mappedActions["update-turn"](game, { playerId, actions });
 
             refreshFn();
           } else {
@@ -57,34 +62,12 @@ class ChooseAction extends React.Component {
         });
       }
 
-      newState.maximizedSelections = true;
-      socket.emit(eventName, selectedActions);
-    }
-
-    if (
-      maximizedSelections &&
-      game &&
-      game.currentRound &&
-      game.currentRound.currentTurn &&
-      !isFilledArray(Object.keys(game.currentRound.currentTurn.chosenActions))
-    ) {
-      if (isPlayerTheKiller) {
-        newState.selectedActions = [];
-      }
-
-      newState.maximizedSelections = false;
+      socket.emit(eventName, actions);
     }
 
     if (isObjectWithProps(newState)) {
+      console.log(JSON.stringify({ newState }));
       this.setState({ ...newState });
-    }
-  }
-
-  choose = (action) => {
-    const { selectedActions } = this.state;
-
-    if (action && !selectedActions.includes(action)) {
-      this.setState({ selectedActions: [...selectedActions, action] });
     }
   };
 
@@ -98,13 +81,10 @@ class ChooseAction extends React.Component {
     );
   };
 
-  render() {
-    const { didGameStart, game, playerId } = this.props;
-    const { selectedActions, maximizedSelections } = this.state;
+  getCards = () => {
+    const { game, playerId } = this.props;
 
-    const isPlayerTheKiller = this.isPlayerTheKiller();
-
-    const cards = game
+    return game
       ? Characters.getAvailableActions()
           .filter((card, index, arr) => arr.indexOf(card) === index)
           .map((action) => {
@@ -122,10 +102,85 @@ class ChooseAction extends React.Component {
             return { src: IMAGES[cardKey], action, isFavoriteAction };
           })
       : [];
+  };
+
+  getTitle = () => {
+    const { game } = this.props;
+
+    const prefix = this.isPlayerTheKiller()
+      ? "Quais lugares deseja visitar"
+      : "Para onde deseja fugir";
+
+    const currentTurn = game.currentRound.currentTurnIndex;
+    const allTurns = game.players.length;
+
+    return prefix + ` esta noite? (${currentTurn}/${allTurns})`;
+  };
+
+  isTooltipDisabled = (card) => {
+    const { isFavoriteAction } = card;
+    return (
+      !isFavoriteAction || this.isCardDisabled(card) || this.isPlayerTheKiller()
+    );
+  };
+
+  isCardDisabled = (card) => {
+    const { action } = card;
+    const { maximizedSelections, selectedActions } = this.state;
+    return maximizedSelections || selectedActions.includes(action);
+  };
+
+  getCardClassName = (card) => {
+    const { isFavoriteAction } = card;
+
+    let className = "cardBox";
+
+    if (isFavoriteAction && !this.isPlayerTheKiller()) {
+      className += " favoriteAction";
+    }
+
+    if (this.isCardDisabled(card)) {
+      className += " disabled";
+    }
+
+    return className;
+  };
+
+  didUserMaximizeSelection = (selectedActionsProps) => {
+    const { game } = this.props;
+    const { selectedActions: selectedActionsState } = this.state;
+
+    const selectedActions = selectedActionsProps || selectedActionsState;
+
+    const isTheKiller = this.isPlayerTheKiller();
+
+    const maxSelectedActions = isTheKiller
+      ? game.currentRound.currentTurn.killerMaxActions
+      : game && game.currentRound
+      ? game.currentRound.currentTurnIndex
+      : 1;
+
+    return selectedActions.length >= maxSelectedActions;
+  };
+
+  render() {
+    const {
+      state,
+      props,
+      getTitle,
+      getCards,
+      isCardDisabled,
+      isTooltipDisabled,
+      getCardClassName,
+      choose,
+    } = this;
+    const { didGameStart, game } = props;
+
+    // console.log({ selectedActions, maximizedSelections });
 
     if (!(game && game.currentRound && didGameStart)) {
       return null;
-    } else if (maximizedSelections) {
+    } else if (this.didUserMaximizeSelection()) {
       return (
         <Text>
           <Spin /> Aguardando jogadores...
@@ -133,42 +188,26 @@ class ChooseAction extends React.Component {
       );
     }
 
-    const prefix = isPlayerTheKiller
-      ? "Quais lugares deseja visitar"
-      : "Para onde deseja fugir";
-
-    const currentTurn = game.currentRound.currentTurnIndex;
-    const allTurns = game.players.length;
-
     return (
       <div>
-        <Text>{prefix + ` esta noite? (${currentTurn}/${allTurns})`}</Text>
+        <Text>{getTitle()}</Text>
         <Stack width="951px" wrap="wrap" direction="row">
-          {cards.map(({ src, action, isFavoriteAction }, index) => {
-            let className = "cardBox";
+          {getCards().map((card, index) => {
+            const { src, action } = card;
 
-            if (isFavoriteAction && !isPlayerTheKiller) {
-              className += " favoriteAction";
-            }
-
-            const disabled =
-              maximizedSelections || selectedActions.includes(action);
-
-            if (disabled) {
-              className += " disabled";
-            }
+            const disabled = isCardDisabled(card);
 
             return (
               <Tooltip
                 key={index}
-                isDisabled={!isFavoriteAction || disabled || isPlayerTheKiller}
+                isDisabled={isTooltipDisabled(card)}
                 label="Este é o seu lugar favorito!"
               >
-                <Box className={className}>
+                <Box className={getCardClassName(card)}>
                   <Image
                     src={src}
                     className="card"
-                    onClick={() => (disabled ? {} : this.choose(action))}
+                    onClick={() => (disabled ? {} : choose(action))}
                   />
                 </Box>
               </Tooltip>
