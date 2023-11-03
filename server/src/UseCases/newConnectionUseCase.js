@@ -1,8 +1,6 @@
 import { Error, Success } from "../Core/utils.js";
 
-/**
- * @typedef {import("../Entities/Game.js")} Game
- */
+import Game from "../Entities/Game.js";
 
 /**
  * @param {string} playerId

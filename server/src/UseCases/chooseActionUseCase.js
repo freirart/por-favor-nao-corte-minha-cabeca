@@ -1,11 +1,7 @@
 import { Error, isFilledArray } from "../Core/utils.js";
 
+import Game from "../Entities/Game.js";
 import { Characters } from "../Entities/Character.js";
-
-/**
- * @typedef {import("../Entities/Game.js")} Game
- * @typedef {import("../Core/utils.js").Success} Success
- */
 
 /**
  * @param {string} playerId

@@ -1,10 +1,7 @@
+import Game from "../Entities/Game.js";
 import { Characters } from "../Entities/Character.js";
 
 import chooseActionUseCase from "../UseCases/chooseActionUseCase.js";
-
-/**
- * @typedef {import("../../src/Entities/Game.js")} Game
- */
 
 export class Success {
     constructor(status = 200, message) {

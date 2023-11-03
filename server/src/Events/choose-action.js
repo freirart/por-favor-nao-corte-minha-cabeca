@@ -1,14 +1,11 @@
 import { Error } from "../Core/utils.js";
 
+import Game from "../Entities/Game.js";
 import logger from "../Entities/Logger.js";
 
 import chooseActionUseCase from "../UseCases/chooseActionUseCase.js";
 
 import gameStatusUpdate from "./game-status-update.js";
-
-/**
- * @typedef {import("../Entities/Game.js")} Game
- */
 
 /**
  * @param {Socket} socket
