@@ -1,4 +1,4 @@
-import { BaseCharacter } from "./Character";
+import { BaseCharacter } from "./Character.js";
 
 export default class Player {
     /** @type {BaseCharacter} */ character = null;
