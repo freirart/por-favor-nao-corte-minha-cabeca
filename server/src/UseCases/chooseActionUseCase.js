@@ -33,10 +33,12 @@ const chooseActionUseCase = (playerId, actions, game, isServer = false) => {
 
         const didTurnEnd = Object.keys(chosenActions).length === players.length;
 
+        let data;
+
         if (didTurnEnd) {
-            if (isServer) {
-                scoringUseCase(game);
-            }
+            data = { ...chosenActions };
+
+            scoringUseCase(game);
 
             if (currentRound.canStartANewTurn()) {
                 nextTurn();
@@ -44,6 +46,8 @@ const chooseActionUseCase = (playerId, actions, game, isServer = false) => {
                 nextRound();
             }
         }
+
+        return data;
     } catch (err) {
         console.error(err);
         return Error.message(err);

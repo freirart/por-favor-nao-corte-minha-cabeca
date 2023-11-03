@@ -1,4 +1,5 @@
-import { Error } from "../Core/utils.js";
+import { Socket } from "socket.io";
+import { Error, isObjectWithProps } from "../Core/utils.js";
 
 import Game from "../Entities/Game.js";
 import logger from "../Entities/Logger.js";
@@ -24,10 +25,16 @@ export default function chooseAction(socket, actions, game) {
         emitData.success = false;
         emitData.error = response.message;
     } else {
-        gameStatusUpdate(socket, {
-            action: "update-turn",
-            data: { playerId, actions: [""] },
-        });
+        if (isObjectWithProps(response)) {
+            emitData.action = "update-turn";
+            emitData.data = response;
+            gameStatusUpdate(socket, emitData);
+        } else {
+            gameStatusUpdate(socket, {
+                action: "update-turn",
+                data: { playerId, actions: [""] },
+            });
+        }
     }
 
     socket.emit("choose-action", emitData);
