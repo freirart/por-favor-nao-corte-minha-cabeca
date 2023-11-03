@@ -9,7 +9,7 @@ import scoringUseCase from "./scoringUseCase.js";
  * @param {string[]} actions
  * @param {Game} game
  */
-const chooseActionUseCase = (playerId, actions, game, isServer = false) => {
+const chooseActionUseCase = (playerId, actions, game) => {
     if (!isFilledArray(actions)) {
         return Error.badRequest("Actions should be an array with locations.");
     }
