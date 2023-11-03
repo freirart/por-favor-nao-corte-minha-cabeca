@@ -12,7 +12,6 @@ import { Characters } from "../Entities/Character.js";
  * @param {Object} data
  * @param {String} data.characterName
  * @param {Game} game
- * @returns {Promise<Success|Error>}
  */
 export default function chooseCharacterUseCase(playerId, data, game) {
     if (!data.characterName) {

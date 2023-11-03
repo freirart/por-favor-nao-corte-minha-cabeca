@@ -11,7 +11,6 @@ import { Characters } from "../Entities/Character.js";
  * @param {string} playerId
  * @param {string[]} actions
  * @param {Game} game
- * @returns {Promise<Success|Error>}
  */
 const chooseActionUseCase = (playerId, actions, game) => {
     if (!isFilledArray(actions)) {
