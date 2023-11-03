@@ -2,13 +2,14 @@ import { Error, isFilledArray } from "../Core/utils.js";
 
 import Game from "../Entities/Game.js";
 import { Characters } from "../Entities/Character.js";
+import scoringUseCase from "./scoringUseCase.js";
 
 /**
  * @param {string} playerId
  * @param {string[]} actions
  * @param {Game} game
  */
-const chooseActionUseCase = (playerId, actions, game) => {
+const chooseActionUseCase = (playerId, actions, game, isServer = false) => {
     if (!isFilledArray(actions)) {
         return Error.badRequest("Actions should be an array with locations.");
     }
@@ -33,6 +34,10 @@ const chooseActionUseCase = (playerId, actions, game) => {
         const didTurnEnd = Object.keys(chosenActions).length === players.length;
 
         if (didTurnEnd) {
+            if (isServer) {
+                scoringUseCase(game);
+            }
+
             if (currentRound.canStartANewTurn()) {
                 nextTurn();
             } else {

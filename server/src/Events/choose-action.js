@@ -15,7 +15,7 @@ import gameStatusUpdate from "./game-status-update.js";
 export default function chooseAction(socket, actions, game) {
     const playerId = socket.id;
 
-    const response = chooseActionUseCase(playerId, actions, game);
+    const response = chooseActionUseCase(playerId, actions, game, true);
 
     const emitData = { success: true };
 
