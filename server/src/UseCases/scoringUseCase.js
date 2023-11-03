@@ -22,7 +22,7 @@ const scoringUseCase = (game) => {
 
             if (!killerActions.includes(action)) {
                 player.baseScore.push(
-                    new Point("Survived", roundIndex, turnIndex)
+                    new Point("Survived", roundIndex, turnIndex, action)
                 );
 
                 if (favoriteAction) {
@@ -30,13 +30,14 @@ const scoringUseCase = (game) => {
                         new Point(
                             "Survived at favorite place",
                             roundIndex,
-                            turnIndex
+                            turnIndex,
+                            action
                         )
                     );
                 }
             } else {
                 killer.killerScore.push(
-                    new Point("Killed", roundIndex, turnIndex)
+                    new Point("Killed", roundIndex, turnIndex, action)
                 );
 
                 if (favoriteAction) {
@@ -44,7 +45,8 @@ const scoringUseCase = (game) => {
                         new Point(
                             "Killed at favorite place",
                             roundIndex,
-                            turnIndex
+                            turnIndex,
+                            action
                         )
                     );
                 }
