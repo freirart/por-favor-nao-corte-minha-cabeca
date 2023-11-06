@@ -1,10 +1,7 @@
+import Game from "../Entities/Game.js";
 import { Characters } from "../Entities/Character.js";
 
 import chooseActionUseCase from "../UseCases/chooseActionUseCase.js";
-
-/**
- * @typedef {import("../../src/Entities/Game.js")} Game
- */
 
 export class Success {
     constructor(status = 200, message) {
@@ -156,8 +153,16 @@ export const mappedActions = {
      * @param {Object} data
      */
     "update-turn": (game, data) => {
-        const { [playerIdStr]: playerId, actions } = data;
-        chooseActionUseCase(playerId, actions, game);
+        if (isObjectWithProps(data)) {
+            if (playerIdStr in data) {
+                const { [playerIdStr]: playerId, actions } = data;
+                chooseActionUseCase(playerId, actions, game);
+            } else {
+                for (const [playerId, actions] of Object.entries(data)) {
+                    chooseActionUseCase(playerId, actions, game);
+                }
+            }
+        }
     },
 };
 

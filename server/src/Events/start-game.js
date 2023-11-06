@@ -1,15 +1,12 @@
+import { Socket } from "socket.io";
 import { Error } from "../Core/utils.js";
 
+import Game from "../Entities/Game.js";
 import logger from "../Entities/Logger.js";
 
 import startGameUseCase from "../UseCases/startGameUseCase.js";
 
 import gameStatusUpdate from "./game-status-update.js";
-
-/**
- * @typedef {import("../Entities/Game.js")} Game
- * @typedef {import("socket.io").Socket} Socket
- */
 
 /**
  * @param {Socket} socket

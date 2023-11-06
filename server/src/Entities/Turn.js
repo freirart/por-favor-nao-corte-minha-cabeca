@@ -2,6 +2,8 @@
  * @typedef {string[]} Actions
  */
 
+import { isFilledArray } from "../Core/utils.js";
+
 class Turn {
     killerId = "";
     killerMaxActions = 0;
@@ -30,6 +32,14 @@ class Turn {
                 chosenActions[playerId].length < killerMaxActions)
         ) {
             this.chosenActions[playerId] = [...actions];
+            return true;
+        } else if (
+            playerId in chosenActions &&
+            isFilledArray(actions) &&
+            !chosenActions[playerId][0] &&
+            actions[0]
+        ) {
+            this.chosenActions[playerId] = actions;
             return true;
         }
 

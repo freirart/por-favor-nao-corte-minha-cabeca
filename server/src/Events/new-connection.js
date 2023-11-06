@@ -1,5 +1,8 @@
+import { Server, Socket } from "socket.io";
+
 import { Error } from "../Core/utils.js";
 
+import Game from "../Entities/Game.js";
 import logger from "../Entities/Logger.js";
 
 import newConnectionUseCase from "../UseCases/newConnectionUseCase.js";
@@ -7,17 +10,10 @@ import newConnectionUseCase from "../UseCases/newConnectionUseCase.js";
 import gameStatusUpdate from "./game-status-update.js";
 
 /**
- * @typedef {import("../Entities/Game.js")} Game
- * @typedef {import("socket.io").Socket} Socket
- * @typedef {import("socket.io").Server} Server
- */
-
-/**
  * @param {Socket} socket
  * @param {Server} io
  * @param {Object} data
  * @param {Game} game
- * @returns {Promise<boolean>}
  */
 export default function newConnection(socket, data, game) {
     const playerId = socket.id;
