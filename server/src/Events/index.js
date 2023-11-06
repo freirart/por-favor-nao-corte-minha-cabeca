@@ -1,3 +1,6 @@
+import { Socket } from "socket.io";
+
+import Game from "../Entities/Game.js";
 import logger from "../Entities/Logger.js";
 
 import newConnection from "./new-connection.js";
@@ -5,11 +8,6 @@ import disconnect from "./disconnect.js";
 import chooseCharacter from "./choose-character.js";
 import startGame from "./start-game.js";
 import chooseAction from "./choose-action.js";
-
-/**
- * @typedef {import("../Entities/Game.js")} Game
- * @typedef {import("socket.io").Socket"} Socket
- */
 
 /**
  * @param {Socket} socket

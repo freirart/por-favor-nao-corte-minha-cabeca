@@ -92,10 +92,12 @@ class ChooseAction extends React.Component {
 
     socket.on(eventName, (data) => {
       if (data.success) {
-        mappedActions["update-turn"](game, {
+        const updateData = data.data || {
           playerId,
           actions: socketActions,
-        });
+        };
+
+        mappedActions["update-turn"](game, updateData);
 
         refreshFn();
       } else {

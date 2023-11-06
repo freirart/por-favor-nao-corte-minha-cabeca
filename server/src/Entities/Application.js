@@ -1,18 +1,13 @@
 import express, { json, Router } from "express";
-import { createServer } from "http";
+import { createServer, Server } from "http";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
 import logger from "./Logger.js";
 
-/**
- * @typedef {import("http").Server} Server
- * @typedef {import("express").Express} Express
- */
-
 class App {
-    /** @type {Express} */ _express = null;
+    _express = null;
     /** @type {Server} */ _server = null;
 
     constructor() {

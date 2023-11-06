@@ -1,17 +1,13 @@
 import { Error, isFilledArray } from "../Core/utils.js";
 
+import Game from "../Entities/Game.js";
 import { Characters } from "../Entities/Character.js";
-
-/**
- * @typedef {import("../Entities/Game.js")} Game
- * @typedef {import("../Core/utils.js").Success} Success
- */
+import scoringUseCase from "./scoringUseCase.js";
 
 /**
  * @param {string} playerId
  * @param {string[]} actions
  * @param {Game} game
- * @returns {Promise<Success|Error>}
  */
 const chooseActionUseCase = (playerId, actions, game) => {
     if (!isFilledArray(actions)) {
@@ -37,13 +33,21 @@ const chooseActionUseCase = (playerId, actions, game) => {
 
         const didTurnEnd = Object.keys(chosenActions).length === players.length;
 
+        let data;
+
         if (didTurnEnd) {
+            data = { ...chosenActions };
+
+            scoringUseCase(game);
+
             if (currentRound.canStartANewTurn()) {
                 nextTurn();
             } else {
                 nextRound();
             }
         }
+
+        return data;
     } catch (err) {
         console.error(err);
         return Error.message(err);
