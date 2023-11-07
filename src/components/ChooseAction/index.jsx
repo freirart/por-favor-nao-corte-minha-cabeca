@@ -220,7 +220,7 @@ class ChooseAction extends React.Component {
     } = this;
     const { didGameStart, game } = props;
 
-    if (!(game && game.currentRound && didGameStart)) {
+    if (!(game && game.currentRound && didGameStart && !game.winnerId)) {
       return null;
     } else if (this.didUserMaximizeSelection()) {
       return (

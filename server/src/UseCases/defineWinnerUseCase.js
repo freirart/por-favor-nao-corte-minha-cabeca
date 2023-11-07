@@ -1,5 +1,19 @@
 import { isFilledArray } from "../Core/utils.js";
+
 import Game from "../Entities/Game.js";
+import Player from "../Entities/Player.js";
+
+/**
+ *
+ * @param {Player} player
+ * @returns
+ */
+const compareScore = (player, winner) => {
+  return (
+    player.baseScore.length + player.killerScore.length >=
+    winner.baseScore.length + winner.killerScore.length
+  );
+};
 
 /**
  *
@@ -11,19 +25,13 @@ const defineWinnerUseCase = (game) => {
   let [winner] = players;
 
   for (const p of players) {
-    if (
-      p.baseScore.length + p.killerScore.length >=
-      winner.baseScore.length + winner.killerScore.length
-    ) {
+    if (compareScore(p, winner)) {
       winner = p;
     }
   }
 
   const draw = players.filter(
-    (p) =>
-      p.playerId !== winner.playerId &&
-      p.baseScore.length + p.killerScore.length >=
-        winner.baseScore.length + winner.killerScore.length
+    (p) => p.playerId !== winner.playerId && compareScore(p, winner)
   );
 
   if (isFilledArray(draw)) {
