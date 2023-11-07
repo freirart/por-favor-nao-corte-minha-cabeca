@@ -11,6 +11,7 @@ import NameInput from "./components/NameInput";
 import ChooseCharacter from "./components/ChooseCharacter";
 import StartGame from "./components/StartGame";
 import ChooseAction from "./components/ChooseAction";
+import ShowWinner from "./components/ShowWinner";
 
 class App extends React.Component {
   state = {
@@ -140,6 +141,7 @@ class App extends React.Component {
           didGameStart={didGameStart}
           refreshFn={refreshFn}
         />
+        <ShowWinner game={game} />
       </div>
     );
   }
