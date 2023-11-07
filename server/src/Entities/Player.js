@@ -1,25 +1,19 @@
 import { BaseCharacter } from "./Character.js";
+import Point from "./Point.js";
 
 export default class Player {
-    /** @type {BaseCharacter} */ character = null;
-    killerScore = [];
-    baseScore = [];
+  /** @type {BaseCharacter} */ character = null;
+  /** @type {Point[]} */ killerScore = [];
+  /** @type {Point[]} */ baseScore = [];
 
-    /**
-     * @param {string} name
-     * @param {string} playerId
-     * @returns {Player}
-     * @constructor
-     */
-    constructor(name, playerId) {
-        this.name = name;
-        this.playerId = playerId;
-    }
-
-    /** It's total score: baseScore + killerScore
-     * @returns {number}
-     */
-    get score() {
-        return this.baseScore.length + this.killerScore.length;
-    }
+  /**
+   * @param {string} name
+   * @param {string} playerId
+   * @returns {Player}
+   * @constructor
+   */
+  constructor(name, playerId) {
+    this.name = name;
+    this.playerId = playerId;
+  }
 }
