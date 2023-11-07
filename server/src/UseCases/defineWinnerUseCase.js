@@ -35,8 +35,6 @@ const defineWinnerUseCase = (game) => {
   );
 
   if (isFilledArray(draw)) {
-    winner = draw[0];
-
     for (const d of draw) {
       if (d.killerScore.length > winner.killerScore.length) {
         winner = d;
