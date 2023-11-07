@@ -192,8 +192,15 @@ class Game {
    * @param {string} playerId
    */
   disconnectPlayer(playerId, shouldReassignHostId = true) {
-    const { players, hostId, didGameStart, killerIds, minPlayers, rounds } =
-      this;
+    const {
+      players,
+      hostId,
+      didGameStart,
+      killerIds,
+      minPlayers,
+      rounds,
+      winnerId,
+    } = this;
 
     if (!playerId || !players.find((p) => p.playerId === playerId)) {
       return false;
@@ -212,8 +219,14 @@ class Game {
         this.rounds = [];
       }
 
-      if (!isFilledArray(newPlayers) && hostId) {
-        this.hostId = "";
+      if (!isFilledArray(newPlayers)) {
+        if (hostId) {
+          this.hostId = "";
+        }
+
+        if (winnerId) {
+          this.winnerId = "";
+        }
       }
     }
 
