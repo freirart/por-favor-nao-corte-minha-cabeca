@@ -153,8 +153,16 @@ export const mappedActions = {
      * @param {Object} data
      */
     "update-turn": (game, data) => {
-        const { [playerIdStr]: playerId, actions } = data;
-        chooseActionUseCase(playerId, actions, game);
+        if (isObjectWithProps(data)) {
+            if (playerIdStr in data) {
+                const { [playerIdStr]: playerId, actions } = data;
+                chooseActionUseCase(playerId, actions, game);
+            } else {
+                for (const [playerId, actions] of Object.entries(data)) {
+                    chooseActionUseCase(playerId, actions, game);
+                }
+            }
+        }
     },
 };
 

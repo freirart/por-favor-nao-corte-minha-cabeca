@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 
-import logger from "../Entities/Logger.js";
 import Game from "../Entities/Game.js";
+import logger from "../Entities/Logger.js";
 
 import newConnection from "./new-connection.js";
 import disconnect from "./disconnect.js";

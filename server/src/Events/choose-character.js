@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import { Error } from "../Core/utils.js";
 
 import Game from "../Entities/Game.js";

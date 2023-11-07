@@ -2,8 +2,8 @@ import { BaseCharacter } from "./Character.js";
 
 export default class Player {
     /** @type {BaseCharacter} */ character = null;
-    killerScore = 0;
-    baseScore = 0;
+    killerScore = [];
+    baseScore = [];
 
     /**
      * @param {string} name
@@ -20,6 +20,6 @@ export default class Player {
      * @returns {number}
      */
     get score() {
-        return this.baseScore + this.killerScore;
+        return this.baseScore.length + this.killerScore.length;
     }
 }

@@ -7,11 +7,10 @@ import { fileURLToPath } from "url";
 import logger from "./Logger.js";
 
 class App {
-    /** @type {express} */ _express = null;
+    _express = null;
     /** @type {Server} */ _server = null;
 
     constructor() {
-        this.server;
         this.middlewares();
         this.routes();
     }

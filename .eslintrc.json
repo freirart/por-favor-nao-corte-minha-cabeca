@@ -1,16 +1,29 @@
 {
   "env": {
     "es2021": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
-  "extends": ["react-app", "react-app/jest", "plugin:prettier/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:vitest/recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "rules": {
-    "indent": "error"
+    "indent": "error",
+    "testing-library/await-async-query": "off",
+    "import/no-anonymous-default-export": "off"
   },
-  "plugins": ["eslint-plugin-prettier", "react"]
+  "plugins": ["eslint-plugin-prettier", "eslint-plugin-jsx-a11y", "eslint-plugin-react-hooks", "eslint-plugin-react-refresh", "react", "vitest", "jest"]
 }
